@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+anthropic
+qdrant-client
+sentence-transformers
+dbt-duckdb
+mlflow
+ragas
+langchain
+langchain-anthropic
+langchain-community
+pandas
+python-dotenv
+datasets

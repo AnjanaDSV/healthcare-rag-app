@@ -1,0 +1,62 @@
+version: 2
+
+models:
+  - name: stg_patients
+    description: "Masked patient demographics (MRN-based)"
+    columns:
+      - name: patient_id
+        tests:
+          - not_null
+          - unique
+      - name: patient_name
+        tests:
+          - not_null
+
+  - name: stg_conditions
+    description: "Patient conditions (UUID-keyed)"
+    columns:
+      - name: patient_id
+        tests:
+          - not_null
+      - name: condition_name
+        tests:
+          - not_null
+
+  - name: stg_medications
+    description: "Prescribed medications (UUID-keyed)"
+    columns:
+      - name: patient_id
+        tests:
+          - not_null
+      - name: medication_name
+        tests:
+          - not_null
+
+  - name: stg_encounters
+    description: "Patient encounters (UUID-keyed)"
+    columns:
+      - name: patient_id
+        tests:
+          - not_null
+      - name: encounter_id
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_observations
+    description: "Clinical observations — vitals and labs (UUID-keyed)"
+    columns:
+      - name: patient_id
+        tests:
+          - not_null
+
+  - name: clinical_summary
+    description: "Gold layer: rich clinical narrative per UUID patient, ready for RAG embedding"
+    columns:
+      - name: patient_id
+        tests:
+          - not_null
+          - unique
+      - name: clinical_note_text
+        tests:
+          - not_null

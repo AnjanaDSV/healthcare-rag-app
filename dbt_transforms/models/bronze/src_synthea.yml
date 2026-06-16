@@ -1,0 +1,99 @@
+version: 2
+
+sources:
+  - name: synthea
+    description: "Raw Synthea synthetic patient data loaded from CSV files in data/raw/"
+    loader: duckdb
+    schema: main
+    tables:
+      - name: patients
+        description: "Masked patient demographics (MRN-based, faker-generated names)"
+        columns:
+          - name: mrn
+            description: "Unique patient identifier (MRN-XXXXXX format)"
+          - name: name
+            description: "Full patient name (masked)"
+          - name: dob
+            description: "Date of birth (MM/DD/YYYY)"
+          - name: diagnosis
+            description: "Primary diagnosis"
+          - name: address
+            description: "Patient address (masked)"
+          - name: insurance_id
+            description: "Insurance identifier"
+
+      - name: conditions
+        description: "Patient diagnoses/conditions with SNOMED-CT codes"
+        columns:
+          - name: PATIENT
+            description: "UUID foreign key to patient"
+          - name: ENCOUNTER
+            description: "UUID of the related encounter"
+          - name: START
+            description: "Condition onset date"
+          - name: STOP
+            description: "Condition resolution date (null if active)"
+          - name: CODE
+            description: "SNOMED-CT code"
+          - name: DESCRIPTION
+            description: "Human-readable condition name"
+
+      - name: medications
+        description: "Prescribed medications per patient"
+        columns:
+          - name: PATIENT
+            description: "UUID foreign key to patient"
+          - name: ENCOUNTER
+            description: "UUID of the prescribing encounter"
+          - name: START
+            description: "Medication start datetime"
+          - name: STOP
+            description: "Medication stop datetime (null if ongoing)"
+          - name: CODE
+            description: "RxNorm medication code"
+          - name: DESCRIPTION
+            description: "Medication name and dosage"
+          - name: TOTALCOST
+            description: "Total dispensing cost"
+          - name: REASONDESCRIPTION
+            description: "Clinical reason for prescribing"
+
+      - name: encounters
+        description: "Patient visit/encounter records"
+        columns:
+          - name: Id
+            description: "Unique encounter UUID"
+          - name: PATIENT
+            description: "UUID foreign key to patient"
+          - name: START
+            description: "Encounter start datetime"
+          - name: STOP
+            description: "Encounter stop datetime"
+          - name: ENCOUNTERCLASS
+            description: "Type of encounter (wellness, emergency, ambulatory, etc.)"
+          - name: DESCRIPTION
+            description: "Encounter description"
+          - name: TOTAL_CLAIM_COST
+            description: "Total billed cost"
+          - name: REASONDESCRIPTION
+            description: "Reason for the visit"
+
+      - name: observations
+        description: "Clinical observations — vitals and lab results"
+        columns:
+          - name: PATIENT
+            description: "UUID foreign key to patient"
+          - name: ENCOUNTER
+            description: "UUID of the related encounter"
+          - name: DATE
+            description: "Observation datetime"
+          - name: CATEGORY
+            description: "Observation category (vital-signs, laboratory, etc.)"
+          - name: CODE
+            description: "LOINC code"
+          - name: DESCRIPTION
+            description: "Observation name"
+          - name: VALUE
+            description: "Observed value"
+          - name: UNITS
+            description: "Units of measurement"

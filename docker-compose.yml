@@ -1,0 +1,27 @@
+services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: healthcare_qdrant
+    ports:
+      - "6343:6333"
+      - "6344:6334"
+    volumes:
+      - qdrant_storage:/qdrant/storage
+    environment:
+      - QDRANT__SERVICE__GRPC_PORT=6334
+    restart: unless-stopped
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:latest
+    container_name: healthcare_mlflow
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./mlflow_runs:/mlflow
+    environment:
+      - MLFLOW_ALLOW_FILE_STORE=true
+    command: mlflow server --host 0.0.0.0 --port 5001 --backend-store-uri /mlflow --default-artifact-root /mlflow/artifacts
+    restart: unless-stopped
+
+volumes:
+  qdrant_storage:
