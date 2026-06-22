@@ -49,6 +49,7 @@ def evaluate(
     # Anthropic rejects requests that set both temperature and top_p; ragas's
     # InstructorLLM defaults to sending both for every provider.
     judge_llm.model_args.pop("top_p", None)
+    judge_llm.model_args["temperature"] = 0.0
     # answer_relevancy still calls the legacy embed_query() interface, which the
     # modern ragas.embeddings.HuggingFaceEmbeddings (embed_text-only) doesn't implement.
     judge_embeddings = LangchainEmbeddingsWrapper(
