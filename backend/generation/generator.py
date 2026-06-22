@@ -36,6 +36,7 @@ Please answer the clinical question based solely on the context above."""
     response = client.messages.create(
         model=MODEL,
         max_tokens=1024,
+        temperature=0.0,
         system=SYSTEM_PROMPT,
         messages=[{"role": "user", "content": user_message}],
     )
